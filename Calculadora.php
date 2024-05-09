@@ -1,58 +1,3 @@
-<?php
-    session_start();
-
-    if (!isset($_SESSION['history'])) 
-    {
-        $_SESSION['history'] = array();
-    }
-
-    if ($_SERVER["REQUEST_METHOD"] == "POST") 
-    {
-        if (isset($_POST['clear'])) 
-        {
-            $_SESSION['history'] = array();
-        } else {
-            $n1 = isset($_POST['n1']) ? $_POST['n1'] : null;
-            $n2 = isset($_POST['n2']) ? $_POST['n2'] : null;
-            $operation = $_POST['operation'];
-
-            switch ($operation) {
-                case '+':
-                    $result = $n1 + $n2;
-                    break;
-                case '-':
-                    $result = $n1 - $n2;
-                    break;
-                case '*':
-                    $result = $n1 * $n2;
-                    break;
-                case '/':
-                    if ($n2 != 0) 
-                    {
-                        $result = $n1 / $n2;
-                    } else {
-                        $result = "Error";
-                    }
-                    break;
-                case '!':
-                    $result = 1;
-                    for ($i = 1; $i <= $n1; $i++) {
-                        $result *= $i;
-                    }
-                    break;
-                case '^':
-                    $result = pow($n1, $n2);
-                    break;
-                default:
-                    $result = "Operação inválida!";
-                    break;
-            }
-
-            $_SESSION['history'][] = "$n1 $operation $n2 = $result";
-        }
-    }
-?>
-
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -64,6 +9,16 @@
         {
             background-color: black;
             color: gold;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container 
+        {
+            width: 400px;
         }
 
         .btn-group button 
@@ -95,22 +50,20 @@
             border-radius: 5px;
             padding: 10px 20px;
             cursor: pointer;
+            display: block;
+            margin-top: 10px;
         }
 
         form input[type="number"],
-        form select 
+        form select,
+        form input[type="text"] 
         {
             border-radius: 5px;
             border: 1px solid black;
             padding: 5px;
-        }
-
-        form input[type="text"],
-        form select 
-        {
-            border-radius: 5px;
-            border: 1px solid black;
-            padding: 5px;
+            margin-bottom: 10px;
+            display: block;
+            width: calc(100% - 12px); /* Adicionado para compensar a largura da borda */
         }
 
         .history 
@@ -120,52 +73,53 @@
     </style>
 </head>
 <body>
-    
-    <form action="" method="post">
-
-        <label for="n1">N1</label>
-        <input type="number" name="n1" id="n1" required>
-
-        <label for="operation">Operação</label>
-        <select name="operation" id="operation" required>
-            <option value="+">+</option>
-            <option value="-">-</option>
-            <option value="*">*</option>
-            <option value="/">/</option>
-            <option value="!">n!</option>
-            <option value="^">x^y</option>
-        </select>
-
-        <label for="n2">N2</label>
-        <input type="number" name="n2" id="n2">
-
-        <input type="submit" value="Calcular">
-
-        <label for="resultado">Resultado</label>
-        <input type="text" name="resultado" id="resultado" value="<?php if (isset($result)) echo $result; ?>" readonly>
-
-    </form>
-
-    <div class="btn-group">
-        <button id="showHistory">Mostrar Histórico</button>
+    <div class="container">
         <form action="" method="post">
-            <button type="submit" name="clear">Limpar Histórico</button>
-        </form>
-    </div>
 
-    <div class="history">
-        <?php
-            if (!empty($_SESSION['history'])) 
-            {
-                echo "<h3>Histórico de Cálculos:</h3>";
-                foreach ($_SESSION['history'] as $calculo) 
+            <label for="n1">N1</label>
+            <input type="number" name="n1" id="n1" required>
+
+            <label for="operation">Operação</label>
+            <select name="operation" id="operation" required>
+                <option value="somar">+</option>
+                <option value="subtrair">-</option>
+                <option value="multiplicar">*</option>
+                <option value="dividir">/</option>
+                <option value="fatoracao">n!</option>
+                <option value="potencia">x^y</option>
+            </select>
+
+            <label for="n2">N2</label>
+            <input type="number" name="n2" id="n2">
+
+            <label for="result">Resultado</label>
+            <input type="text" name="result" id="result" value="<?php if (isset($result)) echo $result; ?>" readonly>
+
+            <input type="submit" value="Calcular">
+
+        </form>
+
+        <div class="btn-group">
+            <button id="showHistory">Mostrar Histórico</button>
+            <form action="" method="post">
+                <button type="submit" name="clear">Limpar Histórico</button>
+            </form>
+        </div>
+
+        <div class="history">
+            <?php
+                if (!empty($_SESSION['history'])) 
                 {
-                    echo "<p>$calculo</p>";
+                    echo "<h3>Histórico de Cálculos:</h3>";
+                    foreach ($_SESSION['history'] as $calculo) 
+                    {
+                        echo "<p>$calculo</p>";
+                    }
+                } else {
+                    echo "<p>Ainda não há cálculos no histórico.</p>";
                 }
-            } else {
-                echo "<p>Ainda não há cálculos no histórico.</p>";
-            }
-        ?>
+            ?>
+        </div>
     </div>
 
 
