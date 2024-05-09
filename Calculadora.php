@@ -17,16 +17,16 @@
             $operation = $_POST['operation'];
 
             switch ($operation) {
-                case 'somar':
+                case '+':
                     $result = $n1 + $n2;
                     break;
-                case 'subtrair':
+                case '-':
                     $result = $n1 - $n2;
                     break;
-                case 'multiplicar':
+                case '*':
                     $result = $n1 * $n2;
                     break;
-                case 'dividir':
+                case '/':
                     if ($n2 != 0) 
                     {
                         $result = $n1 / $n2;
@@ -34,13 +34,13 @@
                         $result = "Error";
                     }
                     break;
-                case 'fatoracao':
+                case '!':
                     $result = 1;
                     for ($i = 1; $i <= $n1; $i++) {
                         $result *= $i;
                     }
                     break;
-                case 'potencia':
+                case '^':
                     $result = pow($n1, $n2);
                     break;
                 default:
@@ -105,9 +105,12 @@
             padding: 5px;
         }
 
-        .history 
+        form input[type="text"],
+        form select 
         {
-            display: none;
+            border-radius: 5px;
+            border: 1px solid black;
+            padding: 5px;
         }
 
         .history 
@@ -125,18 +128,21 @@
 
         <label for="operation">Operação</label>
         <select name="operation" id="operation" required>
-            <option value="somar">+</option>
-            <option value="subtrair">-</option>
-            <option value="multiplicar">*</option>
-            <option value="dividir">/</option>
-            <option value="fatoracao">n!</option>
-            <option value="potencia">x^y</option>
+            <option value="+">+</option>
+            <option value="-">-</option>
+            <option value="*">*</option>
+            <option value="/">/</option>
+            <option value="!">n!</option>
+            <option value="^">x^y</option>
         </select>
 
         <label for="n2">N2</label>
         <input type="number" name="n2" id="n2">
 
         <input type="submit" value="Calcular">
+
+        <label for="resultado">Resultado</label>
+        <input type="text" name="resultado" id="resultado" value="<?php if (isset($result)) echo $result; ?>" readonly>
 
     </form>
 
