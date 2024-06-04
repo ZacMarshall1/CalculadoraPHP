@@ -1,3 +1,58 @@
+<?php
+    session_start();
+
+    if (!isset($_SESSION['history'])) 
+    {
+        $_SESSION['history'] = array();
+    }
+
+    if ($_SERVER["REQUEST_METHOD"] == "POST") 
+    {
+        if (isset($_POST['clear'])) 
+        {
+            $_SESSION['history'] = array();
+        } else {
+            $n1 = isset($_POST['n1']) ? $_POST['n1'] : null;
+            $n2 = isset($_POST['n2']) ? $_POST['n2'] : null;
+            $operation = $_POST['operation'];
+
+            switch ($operation) {
+                case 'somar':
+                    $result = $n1 + $n2;
+                    break;
+                case 'subtrair':
+                    $result = $n1 - $n2;
+                    break;
+                case 'multiplicar':
+                    $result = $n1 * $n2;
+                    break;
+                case 'dividir':
+                    if ($n2 != 0) 
+                    {
+                        $result = $n1 / $n2;
+                    } else {
+                        $result = "Error";
+                    }
+                    break;
+                case 'fatoracao':
+                    $result = 1;
+                    for ($i = 1; $i <= $n1; $i++) {
+                        $result *= $i;
+                    }
+                    break;
+                case 'potencia':
+                    $result = pow($n1, $n2);
+                    break;
+                default:
+                    $result = "Operação inválida!";
+                    break;
+            }
+
+            $_SESSION['history'][] = "$n1 $operation $n2 = $result";
+        }
+    }
+?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
